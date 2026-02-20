@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Logo Creator Demo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Kanit', sans-serif; background-color: #f8fafc; }
+        .logo-preview { transition: all 0.5s ease; border: 2px dashed #cbd5e1; }
+        .loading-shimmer {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+        }
+        @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+    </style>
+</head>
+<body class="p-4 md:p-10">
+
+    <div class="max-w-5xl mx-auto bg-white rounded-3xl shadow-2xl overflow-hidden flex flex-col md:flex-row">
+        
+        <div class="w-full md:w-80 bg-slate-900 p-8 text-white">
+            <h1 class="text-2xl font-bold mb-8 text-blue-400">🎨 LogoAI Demo</h1>
+            
+            <div class="space-y-6">
+                <div>
+                    <label class="block text-sm mb-2 opacity-70">ชื่อแบรนด์ของคุณ</label>
+                    <input id="brandName" type="text" class="w-full bg-slate-800 border border-slate-700 rounded-lg p-3 text-white focus:ring-2 focus:ring-blue-500 outline-none" placeholder="เช่น กาแฟชาวดอย">
+                </div>
+
+                <div>
+                    <label class="block text-sm mb-2 opacity-70">สไตล์โลโก้</label>
+                    <select id="style" class="w-full bg-slate-800 border border-slate-700 rounded-lg p-3 outline-none">
+                        <option>Minimalist</option>
+                        <option>Modern Tech</option>
+                        <option>Vintage Luxury</option>
+                        <option>Playful/Cartoon</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-sm mb-2 opacity-70">โทนสีหลัก</label>
+                    <input id="color" type="color" class="w-full h-12 rounded-lg bg-slate-800 p-1 cursor-pointer" value="#3b82f6">
+                </div>
+
+                <button onclick="generateLogo()" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-semibold py-4 rounded-xl transition-all shadow-lg active:scale-95">
+                    🚀 เริ่มสร้างโลโก้
+                </button>
+            </div>
+        </div>
+
+        <div class="flex-1 p-8 md:p-12 flex flex-col items-center justify-center bg-slate-50">
+            
+            <div id="statusText" class="mb-4 text-slate-500 font-light text-lg">ใส่ข้อมูลแล้วกดปุ่มเพื่อเริ่มสร้าง...</div>
+
+            <div id="logoContainer" class="logo-preview w-80 h-80 bg-white rounded-2xl shadow-inner flex items-center justify-center relative overflow-hidden">
+                <span id="placeholderText" class="text-slate-300">ตัวอย่างโลโก้จะปรากฏที่นี่</span>
+                <img id="resultImage" class="hidden w-full h-full object-contain p-8" src="" alt="AI Result">
+            </div>
+
+            <div id="actionButtons" class="hidden mt-8 space-x-4">
+                <button class="px-6 py-2 bg-white border border-slate-200 rounded-full shadow-sm hover:bg-slate-50 transition">ดาวน์โหลด PNG</button>
+                <button class="px-6 py-2 bg-slate-900 text-white rounded-full shadow-md hover:bg-slate-800 transition">ใช้บน Mockup</button>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        function generateLogo() {
+            const brand = document.getElementById('brandName').value;
+            const status = document.getElementById('statusText');
+            const container = document.getElementById('logoContainer');
+            const placeholder = document.getElementById('placeholderText');
+            const resultImg = document.getElementById('resultImage');
+            const actions = document.getElementById('actionButtons');
+
+            if(!brand) { alert('กรุณาใส่ชื่อแบรนด์ก่อนครับ'); return; }
+
+            // 1. เริ่มประมวลผล (Simulation)
+            placeholder.classList.add('hidden');
+            resultImg.classList.add('hidden');
+            actions.classList.add('hidden');
+            container.classList.add('loading-shimmer');
+            status.innerText = "🌀 AI กำลังวิเคราะห์สไตล์แบรนด์...";
+
+            setTimeout(() => {
+                status.innerText = "✨ กำลังวาดโครงสร้างโลโก้และลงสี...";
+                
+                setTimeout(() => {
+                    // 2. ดึงรูปจาก Unsplash (จำลองเป็นโลโก้ตาม Keyword)
+                    const style = document.getElementById('style').value;
+                    const randomId = Math.floor(Math.random() * 1000);
+                    // ใช้ placeholder image สำหรับการสาธิต
+                    resultImg.src = `https://picsum.photos/seed/${brand+randomId}/400/400`;
+                    
+                    container.classList.remove('loading-shimmer');
+                    resultImg.classList.remove('hidden');
+                    status.innerText = `สร้างโลโก้สำหรับ "${brand}" สำเร็จ!`;
+                    actions.classList.remove('hidden');
+                }, 2000);
+
+            }, 1500);
+        }
+    </script>
+</body>
+</html>
+
+อยากเปิดโค้ดนี้เป็นเว้ปที่คนสามารถเข้่าถึงได้
